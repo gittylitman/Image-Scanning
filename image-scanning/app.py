@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 @app.route("/image_push_acr", methods=["POST"])
 def send_to_image_scanning():
-    return 'hello!', 200
+    print(request.get())
+    return 'hello!'
 
 
 if __name__ == "__main__":
