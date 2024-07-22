@@ -9,3 +9,4 @@ RUN --mount=type=secret,id=AZURE_TENANT_ID \
 EXPOSE 8080 
 COPY . .
 CMD [ "python" , "app.py" ]
+ 
