@@ -41,25 +41,25 @@ def set_resource_graph_query(image_digest):
     return query
 
 
-def send_to_queue(connection_string, queue_name, json_message, date):
-    try:
-        queue_client = QueueClient.from_connection_string(
-            connection_string,
-            queue_name,
-            message_encode_policy=TextBase64EncodePolicy(),
-        )
-        json_message["dateOfPush"] = date
-        queue_client.send_message(json.dumps(json_message))
-    except Exception as ex:
-        raise Exception(ex)
+# def send_to_queue(connection_string, queue_name, json_message, date):
+#     try:
+#         queue_client = QueueClient.from_connection_string(
+#             connection_string,
+#             queue_name,
+#             message_encode_policy=TextBase64EncodePolicy(),
+#         )
+#         json_message["dateOfPush"] = date
+#         queue_client.send_message(json.dumps(json_message))
+#     except Exception as ex:
+#         raise Exception(ex)
     
-# def send_to_queue(json_message):
-#  try:
-#      queue_client = QueueClient.from_connection_string(
-#             "DefaultEndpointsProtocol=https;AccountName=bycheckloganalytics;AccountKey=v35OL/fIulFJ44YVjxnZPLHPrAp67tq63B5vKksyGY2NlDuMlo5Pb/20AdeT4oqaIs3TuaNW9T1x+ASt09POGA==;EndpointSuffix=core.windows.net",
-#             "try",
-#          message_encode_policy=TextBase64EncodePolicy(),
-#      )
-#      queue_client.send_message(json.dumps(json_message))
-#  except Exception as ex:
-#      raise Exception(ex)
+def send_to_queue(json_message):
+ try:
+     queue_client = QueueClient.from_connection_string(
+            "DefaultEndpointsProtocol=https;AccountName=bycheckloganalytics;AccountKey=v35OL/fIulFJ44YVjxnZPLHPrAp67tq63B5vKksyGY2NlDuMlo5Pb/20AdeT4oqaIs3TuaNW9T1x+ASt09POGA==;EndpointSuffix=core.windows.net",
+            "try",
+         message_encode_policy=TextBase64EncodePolicy(),
+     )
+     queue_client.send_message(json.dumps(json_message))
+ except Exception as ex:
+     raise Exception(ex)
