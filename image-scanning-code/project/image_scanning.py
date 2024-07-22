@@ -17,8 +17,8 @@ def run_resource_graph_query( image_digest, date):
         query = set_resource_graph_query(image_digest)
         result = client.resources(QueryRequest(query=query)).as_dict()
         send_to_queue(
-            "DefaultEndpointsProtocol=https;AccountName=bycheckloganalytics;AccountKey=v35OL/fIulFJ44YVjxnZPLHPrAp67tq63B5vKksyGY2NlDuMlo5Pb/20AdeT4oqaIs3TuaNW9T1x+ASt09POGA==;EndpointSuffix=core.windows.net",
-            "try",
+            config.config_variables.connection_string,
+            config.config_variables.queue_name,
             result,
             date,
         )
