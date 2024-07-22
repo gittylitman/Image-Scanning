@@ -4,9 +4,10 @@ from waitress import serve
 app = Flask(__name__)
 
 
-@app.route("/image_push_acr", methods=["GET"])
+@app.route("/image_push_acr", methods=["POST"])
 def send_to_image_scanning():
-    return 'Hello!'
+    data = request.json
+    return data
 
 
 if __name__ == "__main__":
