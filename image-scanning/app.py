@@ -1,10 +1,7 @@
 from flask import Flask, request
 from waitress import serve
 from azure.storage.queue import QueueClient, TextBase64EncodePolicy
-import json, os
-from dotenv import load_dotenv
-
-load_dotenv()
+import json
 
 app = Flask(__name__)
 
@@ -13,7 +10,7 @@ app = Flask(__name__)
 def send_to_image_scanning():
     response = request.get_json()
     queue_client = QueueClient.from_connection_string(
-            os.getenv("CONNECTION_STRING"),
+            "DefaultEndpointsProtocol=https;AccountName=bycheckloganalytics;AccountKey=v35OL/fIulFJ44YVjxnZPLHPrAp67tq63B5vKksyGY2NlDuMlo5Pb/20AdeT4oqaIs3TuaNW9T1x+ASt09POGA==;EndpointSuffix=core.windows.net",
             "try",
             message_encode_policy=TextBase64EncodePolicy(),
         )
