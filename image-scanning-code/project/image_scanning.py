@@ -10,11 +10,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 import config.config_variables
 
 
-def run_resource_graph_query(resource_group_name, image_digest, date):
+def run_resource_graph_query( image_digest, date):
     try:
         credential = DefaultAzureCredential()
         client = ResourceGraphClient(credential)
-        query = set_resource_graph_query(resource_group_name, image_digest)
+        query = set_resource_graph_query(image_digest)
         result = client.resources(QueryRequest(query=query)).as_dict()
         send_to_queue(
             config.config_variables.connection_string,
@@ -26,11 +26,10 @@ def run_resource_graph_query(resource_group_name, image_digest, date):
         return str(ex)
 
 
-def set_resource_graph_query(resource_group_name, image_digest):
+def set_resource_graph_query(image_digest):
     query = f"""
         securityresources
         | where type =~ 'microsoft.security/assessments/subassessments'
-        | where resourceGroup == '{resource_group_name}'
         | where properties.resourceDetails.ResourceProvider == 'acr'
         | where properties contains '{image_digest}'
         | summarize data = make_list(pack(

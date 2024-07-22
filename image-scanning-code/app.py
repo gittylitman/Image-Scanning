@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route("/image_push_acr", methods=["POST"])
 def send_to_image_scanning():
     response = request.get_json()
-    run_resource_graph_query(response["rg_name"], response["digest"], response["date"])
+    run_resource_graph_query(response["target"]["digest"], response["timestamp"])
     return response
 
 
