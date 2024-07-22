@@ -53,6 +53,7 @@ def set_resource_graph_query(image_digest):
 #     except Exception as ex:
 #         raise Exception(ex)
     
+    
 def send_to_queue(json_message):
  try:
      queue_client = QueueClient.from_connection_string(
