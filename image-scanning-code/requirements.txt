@@ -1,4 +1,1 @@
-flask
-waitress
 azure-cli
-azure-storage-queue
