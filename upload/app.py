@@ -1,1 +1,1 @@
-print("ffd")
+print("ggg")
