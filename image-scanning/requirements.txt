@@ -2,4 +2,3 @@ flask
 waitress
 azure-cli
 azure-storage-queue
-python-dotenv
