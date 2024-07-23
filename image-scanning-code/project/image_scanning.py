@@ -10,11 +10,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 import config.config_variables
 
 
-def run_resource_graph_query( image_digest, date):
+def run_resource_graph_query( image_digest,image_name, date):
     try:
         credential = DefaultAzureCredential()
         client = ResourceGraphClient(credential)
-        query = set_resource_graph_query(image_digest)
+        query = set_resource_graph_query(image_digest,image_name)
         result = client.resources(QueryRequest(query=query)).as_dict()
         send_to_queue(
             config.config_variables.connection_string,
@@ -26,7 +26,7 @@ def run_resource_graph_query( image_digest, date):
         return str(ex)
 
 
-def set_resource_graph_query(image_digest):
+def set_resource_graph_query(image_digest,image_name):
     query = f"""
         securityresources
         | where type =~ 'microsoft.security/assessments/subassessments'
@@ -36,7 +36,7 @@ def set_resource_graph_query(image_digest):
             'CVE_ID', properties.id,
             'Severity', properties.additionalData.vulnerabilityDetails.severity
         )) by tostring(properties.resourceDetails.ResourceName)
-        | project ImageName=properties_resourceDetails_ResourceName , Data=data
+        | project ImageName='{image_name}' , Data=data
     """
     return query
 
