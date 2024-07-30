@@ -1,2 +1,2 @@
-print("finish the task:)")
+print("hello:)")
 
