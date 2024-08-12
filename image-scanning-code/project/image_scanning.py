@@ -12,7 +12,6 @@ import config.config_variables
 
 def run_resource_graph_query( image_digest,image_name,date):
     try:
-        print("vsdfsn")
         credential = DefaultAzureCredential()
         client = ResourceGraphClient(credential)
         query = set_resource_graph_query(image_digest,image_name)
@@ -21,7 +20,7 @@ def run_resource_graph_query( image_digest,image_name,date):
             config.config_variables.connection_string,
             config.config_variables.queue_name,
             result,
-            date
+            date,
         )
     except Exception as ex:
         return str(ex)
@@ -44,7 +43,6 @@ def set_resource_graph_query(image_digest,image_name):
 
 def send_to_queue(connection_string, queue_name, json_message,date):
     try:
-        print("hgfh")
         queue_client = QueueClient.from_connection_string(
             connection_string,
             queue_name,
