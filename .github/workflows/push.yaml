@@ -1,15 +1,13 @@
 name: ⚙️ Build and deploy to ACR 
 
-on:
-  push:
-    branches:
+on: push
       
 permissions:
   contents: read
   packages: write
 
 env:
-  WORKING_DIR: image-scanning-code
+  WORKING_DIR: image_scanning_code
 
 jobs:
   build:
@@ -30,7 +28,7 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+
       - name: 🗝️ Login to Container Registry
         uses: azure/docker-login@v1
         with:
