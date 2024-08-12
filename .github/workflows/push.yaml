@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  WORKING_DIR: upload
+  WORKING_DIR: get-num
 
 jobs:
   build:
