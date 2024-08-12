@@ -11,8 +11,8 @@ def send_to_image_scanning():
     response = request.get_json()
     # response = {response["target"]["digest"],response["target"]["repository"], response["timestamp"]}
     # send_to_queue(response)
-    run_resource_graph_query(response["digest"],response["imagename"])
-    # return response
+    run_resource_graph_query(response["target"]["digest"],response["target"]["repository"], response["timestamp"])
+    return response
 
 
 
