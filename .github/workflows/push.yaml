@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  WORKING_DIR: getMy-num
+  WORKING_DIR: service/gitty
 
 jobs:
   build:
