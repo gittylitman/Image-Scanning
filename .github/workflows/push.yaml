@@ -50,7 +50,7 @@ jobs:
 
       - name: 🏗️ Build and push Docker image to Azure Container Registry
         run: |
-          az acr build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}:${{ steps.meta.outputs.tags }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
+          az acr build -t ${{ steps.meta.outputs.tags }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
 
       # - name: 🐳 Docker Build & Push
       #   uses: docker/build-push-action@v5
