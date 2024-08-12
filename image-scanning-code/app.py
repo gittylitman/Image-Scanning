@@ -8,10 +8,10 @@ app = Flask(__name__)
 
 @app.route("/image_push_acr", methods=["POST"])
 def send_to_image_scanning():
-    # response = request.get_json()
+    response = request.get_json()
     # response = {response["target"]["digest"],response["target"]["repository"], response["timestamp"]}
     # send_to_queue(response)
-    run_resource_graph_query("sha256:b9ef223e0f9eb5f3cfb50b2b644ef12d2719abe0e9c6f9b0ab370d4554c54bdc","services/laravel/func_try_users")
+    run_resource_graph_query(response["digest"],response["imagename"])
     # return response
 
 
@@ -37,5 +37,5 @@ if __name__ == "__main__":
 #   }
 # }
 
-#     send_to_image_scanning(res)
+    send_to_image_scanning()
     serve(app, host="0.0.0.0", port=8080)
