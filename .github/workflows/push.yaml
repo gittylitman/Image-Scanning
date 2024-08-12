@@ -4,7 +4,6 @@ on:
   push:
     branches:
       
-      
 permissions:
   contents: read
   packages: write
@@ -47,17 +46,21 @@ jobs:
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
 
-      - name: 🐳 Docker Build & Push
-        uses: docker/build-push-action@v5
-        id: docker_build
-        with:
-          context: ./${{ env.WORKING_DIR }}
-          push: true
-          provenance: false
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}                                                                                            
-          file: ./${{ env.WORKING_DIR }}/Dockerfile
-          secrets: |
-            "AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
-            "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}"
-            "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}"  
+      - name: 🏗️ Build and push Docker image to Azure Container Registry
+        run: |
+          az acr build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}:${{ env.TAG }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
+
+      # - name: 🐳 Docker Build & Push
+      #   uses: docker/build-push-action@v5
+      #   id: docker_build
+      #   with:
+      #     context: ./${{ env.WORKING_DIR }}
+      #     push: true
+      #     provenance: false
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     tags: ${{ steps.meta.outputs.tags }}                                                                                            
+      #     file: ./${{ env.WORKING_DIR }}/Dockerfile
+      #     secrets: |
+      #       "AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
+      #       "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}"
+      #       "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}"  
