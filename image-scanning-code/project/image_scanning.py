@@ -10,8 +10,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 import config.config_variables
 
 
-def run_resource_graph_query( image_digest,image_name, date):
+def run_resource_graph_query( image_digest,image_name):
     try:
+        print("vvv")
         credential = DefaultAzureCredential()
         client = ResourceGraphClient(credential)
         query = set_resource_graph_query(image_digest,image_name)
@@ -20,7 +21,6 @@ def run_resource_graph_query( image_digest,image_name, date):
             config.config_variables.connection_string,
             config.config_variables.queue_name,
             result,
-            date,
         )
     except Exception as ex:
         return str(ex)
@@ -41,14 +41,15 @@ def set_resource_graph_query(image_digest,image_name):
     return query
 
 
-def send_to_queue(connection_string, queue_name, json_message, date):
+def send_to_queue(connection_string, queue_name, json_message):
     try:
         queue_client = QueueClient.from_connection_string(
             connection_string,
             queue_name,
             message_encode_policy=TextBase64EncodePolicy(),
         )
-        json_message["dateOfPush"] = date
+        print("aaa")
+        # json_message["dateOfPush"] = date
         queue_client.send_message(json.dumps(json_message))
     except Exception as ex:
         raise Exception(ex)
