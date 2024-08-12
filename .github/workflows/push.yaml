@@ -44,7 +44,7 @@ jobs:
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
 
-      - name: 🐳 Docker Build & Push
+      - name: 🐳 Docker Build
         uses: docker/build-push-action@v5
         id: docker_build
         with:
@@ -55,6 +55,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           file: ./${{ env.WORKING_DIR }}/Dockerfile
 
+      - name: 🚢 Push to Container Registry
+        run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
 
 
 # name: ⚙️ Build and deploy to ACR 
@@ -107,9 +109,9 @@ jobs:
 #             type=semver,pattern=v{{version}}
 #             type=semver,pattern=v{{major}}.{{minor}}
 
-#       - name: 🏗️ Build and push Docker image to Azure Container Registry
-#         run: |
-#           az acr build -t ${{ steps.meta.outputs.tags }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
+      # - name: 🏗️ Build and push Docker image to Azure Container Registry
+      #   run: |
+      #     az acr build -t ${{ steps.meta.outputs.tags }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
 
       # - name: 🐳 Docker Build & Push
       #   uses: docker/build-push-action@v5
