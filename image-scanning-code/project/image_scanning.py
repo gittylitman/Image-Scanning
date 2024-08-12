@@ -41,17 +41,17 @@ def set_resource_graph_query(image_digest,image_name):
     return query
 
 
-def send_to_queue(connection_string, queue_name, json_message, date):
-    try:
-        queue_client = QueueClient.from_connection_string(
-            connection_string,
-            queue_name,
-            message_encode_policy=TextBase64EncodePolicy(),
-        )
-        json_message["dateOfPush"] = date
-        queue_client.send_message(json.dumps(json_message))
-    except Exception as ex:
-        raise Exception(ex)
+# def send_to_queue(connection_string, queue_name, json_message, date):
+#     try:
+#         queue_client = QueueClient.from_connection_string(
+#             connection_string,
+#             queue_name,
+#             message_encode_policy=TextBase64EncodePolicy(),
+#         )
+#         json_message["dateOfPush"] = date
+#         queue_client.send_message(json.dumps(json_message))
+#     except Exception as ex:
+#         raise Exception(ex)
     
 def send_to_queue(json_message):
     try:
