@@ -53,3 +53,14 @@ def send_to_queue(connection_string, queue_name, json_message, date):
     except Exception as ex:
         raise Exception(ex)
     
+def send_to_queue(json_message):
+    try:
+        queue_client = QueueClient.from_connection_string(
+            config.config_variables.connection_string,
+            config.config_variables.queue_name,
+            message_encode_policy=TextBase64EncodePolicy(),
+        )
+        queue_client.send_message(json.dumps(json_message))
+    except Exception as ex:
+        raise Exception(ex)
+    
