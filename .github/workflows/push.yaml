@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  WORKING_DIR: service/gitty
+  WORKING_DIR: upload_image
 
 jobs:
   build:
