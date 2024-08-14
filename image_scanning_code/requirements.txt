@@ -3,6 +3,6 @@ waitress
 azure-cli
 azure-identity
 azure-mgmt-resourcegraph
-azure-storage-queue
 python-dotenv
 pytest
+pika

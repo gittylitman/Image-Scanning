@@ -1,26 +1,27 @@
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.resourcegraph import ResourceGraphClient
 from azure.mgmt.resourcegraph.models import QueryRequest
-from azure.storage.queue import QueueClient, TextBase64EncodePolicy
-import json
 import os
 import sys
+import pika
+import logging
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config.config_variables
 
 
-def run_resource_graph_query( image_digest,image_name,date):
+def run_resource_graph_query(image_digest,image_name,date):
     try:
         credential = DefaultAzureCredential()
         client = ResourceGraphClient(credential)
         query = set_resource_graph_query(image_digest,image_name)
         result = client.resources(QueryRequest(query=query)).as_dict()
-        send_to_queue(
-            config.config_variables.connection_string,
-            config.config_variables.queue_name,
+        send_message_to_rabbitmq(
             result,
-            date,
+            config.config_variables.host,
+            config.config_variables.queue_name,
+            config.config_variables.user_name,
+            config.config_variables.password
         )
     except Exception as ex:
         return str(ex)
@@ -41,26 +42,18 @@ def set_resource_graph_query(image_digest,image_name):
     return query
 
 
-def send_to_queue(connection_string, queue_name, json_message,date):
+def send_message_to_rabbitmq(message, host, queue, username, password):
     try:
-        queue_client = QueueClient.from_connection_string(
-            connection_string,
-            queue_name,
-            message_encode_policy=TextBase64EncodePolicy(),
-        )
-        json_message["dateOfPush"] = date
-        queue_client.send_message(json.dumps(json_message))
-    except Exception as ex:
-        raise Exception(ex)
-    
-# def send_to_queue(json_message):
-#     try:
-#         queue_client = QueueClient.from_connection_string(
-#             config.config_variables.connection_string,
-#             config.config_variables.queue_name,
-#             message_encode_policy=TextBase64EncodePolicy(),
-#         )
-#         queue_client.send_message(json.dumps(json_message))
-#     except Exception as ex:
-#         raise Exception(ex)
+        credentials = pika.PlainCredentials(username, password)
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, credentials=credentials))
+        channel = connection.channel()
+        channel.queue_declare(queue=queue)
+
+        channel.basic_publish(exchange='',
+                              routing_key=queue,
+                              body=message)
+        connection.close()
+        
+    except Exception as e:
+        logging.error(f"Error sending message to RabbitMQ: {e}")
     
