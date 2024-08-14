@@ -1,225 +1,63 @@
-name: Build and Push Docker image to Azure Container Registry
+name: ⚙️ Build and deploy to ACR 
 
 on:
   push:
+    branches:
+      
+      
+permissions:
+  contents: read
+  packages: write
 
 env:
   WORKING_DIR: image_scanning_code
 
 jobs:
   build:
+    name: Docker Build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: 📁 Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: 🔧 Docker QEMU Setup
+        uses: docker/setup-qemu-action@v3
 
-    - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: containerRegistryAutomationDev.azurecr.io
-        username: ${{ secrets.AZ_USERNAME }}
-        password: ${{ secrets.AZ_PASSWORD }}
-
-    - name: Build and push Docker image
-      file: ./${{ env.WORKING_DIR }}/Dockerfile
-      run: |
-        docker build -t containerRegistryAutomationDev.azurecr.io/image_scanning_code:latest .
-        docker push containerRegistryAutomationDev.azurecr.io/image_scanning_code:latest
-
-
-
-# name: ⚙️ Build and deploy to ACR 
-
-# on:
-#   push:
-#     branches:
-      
-      
-# permissions:
-#   contents: read
-#   packages: write
-
-# env:
-#   WORKING_DIR: image_scanning_code
-
-# jobs:
-#   build:
-#     name: Docker Build
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: 📁 Checkout repository
-#         uses: actions/checkout@v4
-
-#       - name: 🔧 Docker QEMU Setup
-#         uses: docker/setup-qemu-action@v3
-
-#       - name: 🛠️ Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v3
+      - name: 🛠️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       
-#       - name: 🗝️ Login to Container Registry
-#         uses: azure/docker-login@v1
-#         with:
-#           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-#           username: ${{ secrets.AZ_USERNAME }}
-#           password: ${{ secrets.AZ_PASSWORD }}
+      - name: 🗝️ Login to Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZ_USERNAME }}
+          password: ${{ secrets.AZ_PASSWORD }}
 
-#       - name: 📃 Docker metadata
-#         id: meta
-#         uses: docker/metadata-action@v5
-#         with:
-#           images:  ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
-#           flavor: |
-#             latest=false
-#           tags: |
-#             type=raw,value=latest
-#             type=semver,pattern=v{{version}}
-#             type=semver,pattern=v{{major}}.{{minor}}
+      - name: 📃 Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images:  ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
 
-#       - name: 🐳 Docker Build & Push
-#         uses: docker/build-push-action@v5
-#         id: docker_build
-#         with:
-#           context: ./${{ env.WORKING_DIR }}
-#           push: true
-#           provenance: false
-#           labels: ${{ steps.meta.outputs.labels }}
-#           tags: ${{ steps.meta.outputs.tags }}                                                                                            
-#           file: ./${{ env.WORKING_DIR }}/Dockerfile
-#           secrets: |
-#             "AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
-#             "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}"
-#             "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}"  
-# # name: ⚙️ Build and deploy to ACR 
-
-# # on: push
-
-# # permissions:
-# #   contents: read
-# #   packages: write
-
-# # env:
-# #   WORKING_DIR: image_scanning_code
-
-# # jobs:
-# #   build:
-# #     name: Docker Build
-# #     runs-on: ubuntu-latest
-
-# #     steps:
-# #       - name: 📁 Checkout repository
-# #         uses: actions/checkout@v4
-
-# #       - name: 🔧 Docker QEMU Setup
-# #         uses: docker/setup-qemu-action@v3
-
-# #       - name: 🛠️ Set up Docker Buildx
-# #         uses: docker/setup-buildx-action@v3
-      
-# #       - name: 🗝️ Login to Container Registry
-# #         uses: azure/docker-login@v1
-# #         with:
-# #           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-# #           username: ${{ secrets.AZ_USERNAME }}
-# #           password: ${{ secrets.AZ_PASSWORD }}
-
-# #       - name: 📃 Docker metadata
-# #         id: meta
-# #         uses: docker/metadata-action@v5
-# #         with:
-# #           images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
-# #           flavor: |
-# #             latest=false
-# #           tags: |
-# #             type=raw,value=latest
-# #             type=semver,pattern=v{{version}}
-# #             type=semver,pattern=v{{major}}.{{minor}}
-
-# #       - name: 🐳 Docker Build
-# #         uses: docker/build-push-action@v5
-# #         id: docker_build
-# #         with:
-# #           context: ./${{ env.WORKING_DIR }}
-# #           push: true
-# #           provenance: false
-# #           labels: ${{ steps.meta.outputs.labels }}
-# #           tags: ${{ steps.meta.outputs.tags }}
-# #           file: ./${{ env.WORKING_DIR }}/Dockerfile
-
-# #       - name: 🚢 Push to Container Registry
-# #         run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
-
-
-# # # name: ⚙️ Build and deploy to ACR 
-
-# # # on: push
-      
-# # # permissions:
-# # #   contents: read
-# # #   packages: write
-
-# # # env:
-# # #   WORKING_DIR: image_scanning_code
-
-# # # jobs:
-# # #   build:
-# # #     name: Docker Build
-# # #     runs-on: ubuntu-latest
-
-# # #     steps:
-# # #       - name: 📁 Checkout repository
-# # #         uses: actions/checkout@v4
-
-# # #       - name: 🔧 Docker QEMU Setup
-# # #         uses: docker/setup-qemu-action@v3
-
-# # #       - name: 🛠️ Set up Docker Buildx
-# # #         uses: docker/setup-buildx-action@v3
-
-# # #       - name: 🔑 Login to Azure
-# # #         uses: azure/login@v1
-# # #         with:
-# # #           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-# # #       - name: 🗝️ Login to Container Registry
-# # #         uses: azure/docker-login@v1
-# # #         with:
-# # #           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-# # #           username: ${{ secrets.AZ_USERNAME }}
-# # #           password: ${{ secrets.AZ_PASSWORD }}
-
-# # #       - name: 📃 Docker metadata
-# # #         id: meta
-# # #         uses: docker/metadata-action@v5
-# # #         with:
-# # #           images:  ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.WORKING_DIR }}
-# # #           flavor: |
-# # #             latest=false
-# # #           tags: |
-# # #             type=raw,value=latest
-# # #             type=semver,pattern=v{{version}}
-# # #             type=semver,pattern=v{{major}}.{{minor}}
-
-# #       # - name: 🏗️ Build and push Docker image to Azure Container Registry
-# #       #   run: |
-# #       #     az acr build -t ${{ steps.meta.outputs.tags }} -r ${{ secrets.REGISTRY_LOGIN_SERVER }} ./${{ env.WORKING_DIR }}
-
-# #       # - name: 🐳 Docker Build & Push
-# #       #   uses: docker/build-push-action@v5
-# #       #   id: docker_build
-# #       #   with:
-# #       #     context: ./${{ env.WORKING_DIR }}
-# #       #     push: true
-# #       #     provenance: false
-# #       #     labels: ${{ steps.meta.outputs.labels }}
-# #       #     tags: ${{ steps.meta.outputs.tags }}                                                                                            
-# #       #     file: ./${{ env.WORKING_DIR }}/Dockerfile
-# #       #     secrets: |
-# #       #       "AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
-# #       #       "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}"
-# #       #       "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}"  
+      - name: 🐳 Docker Build & Push
+        uses: docker/build-push-action@v5
+        id: docker_build
+        with:
+          context: ./${{ env.WORKING_DIR }}
+          push: true
+          provenance: false
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}                                                                                            
+          file: ./${{ env.WORKING_DIR }}/Dockerfile
+          secrets: |
+            "AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
+            "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}"
+            "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}"  
