@@ -48,11 +48,11 @@ def send_message_to_rabbitmq(message, host, queue, username, password):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, credentials=credentials))
         channel = connection.channel()
         channel.queue_declare(queue=queue)
-
         channel.basic_publish(exchange='',
                               routing_key=queue,
-                              body=message)
+                              body=str(message))
         connection.close()
+        return 
         
     except Exception as e:
         logging.error(f"Error sending message to RabbitMQ: {e}")
