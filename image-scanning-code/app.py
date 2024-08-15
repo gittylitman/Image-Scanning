@@ -1,7 +1,7 @@
 from flask import Flask, request
 from waitress import serve
 import time
-from project.image_scanning import run_resource_graph_query, send_message_to_rabbitmq
+from project.image_scanning import run_resource_graph_query
 
 
 app = Flask(__name__)
@@ -14,10 +14,5 @@ def send_to_image_scanning():
     run_resource_graph_query(response["target"]["digest"],response["target"]["repository"], response["timestamp"])
     return response
 
-
-
-
-
 if __name__ == "__main__":
-    send_to_image_scanning()
     serve(app, host="0.0.0.0", port=8080)
