@@ -15,11 +15,11 @@ import config.config_variables
 
 def run_resource_graph_query(image_digest,image_name,date):
     try:
-        credential = DefaultAzureCredential()
-        client = ResourceGraphClient(credential)
-        query = set_resource_graph_query(image_digest,image_name)
-        result = client.resources(QueryRequest(query=query)).as_dict()
-        send_message_to_rabbitmq(result)
+        # credential = DefaultAzureCredential()
+        # client = ResourceGraphClient(credential)
+        # query = set_resource_graph_query(image_digest,image_name)
+        # result = client.resources(QueryRequest(query=query)).as_dict()
+        send_message_to_rabbitmq(image_digest)
         # send_to_queue(
         #     config.config_variables.connection_string,
         #     config.config_variables.queue_name,
