@@ -1,8 +1,5 @@
 flask
 waitress
-azure-cli
-azure-identity
-azure-mgmt-resourcegraph
 python-dotenv
 pytest
 pika
