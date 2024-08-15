@@ -55,11 +55,11 @@ def send_message_to_rabbitmq(message):
         channel.basic_publish(exchange='',
                               routing_key="logs",
                               body=message)
-        connection.close()
-        return 
-        
+        connection.close() 
     except Exception as e:
         logging.error(f"Error sending message to RabbitMQ: {e}")
+        
+    return "kjhgfdsdfg"
     
 # def send_to_queue(connection_string, queue_name, json_message, date):
 #     try:
