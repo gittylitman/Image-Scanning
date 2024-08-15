@@ -19,13 +19,7 @@ def run_resource_graph_query(image_digest,image_name,date):
         client = ResourceGraphClient(credential)
         query = set_resource_graph_query(image_digest,image_name)
         result = client.resources(QueryRequest(query=query)).as_dict()
-        send_message_to_rabbitmq(
-            result,
-            "4.156.100.2",
-            "logs",
-            "admin",
-            "admin"
-        )
+        send_message_to_rabbitmq(result)
         # send_to_queue(
         #     config.config_variables.connection_string,
         #     config.config_variables.queue_name,
@@ -52,14 +46,14 @@ def set_resource_graph_query(image_digest,image_name):
     return query
 
 
-def send_message_to_rabbitmq(message, host, queue, username, password):
+def send_message_to_rabbitmq(message):
     try:
-        credentials = pika.PlainCredentials(username, password)
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, credentials=credentials))
+        credentials = pika.PlainCredentials("admin", "admin")
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host="4.156.100.2", credentials=credentials))
         channel = connection.channel()
-        channel.queue_declare(queue=queue)
+        channel.queue_declare(queue="logs")
         channel.basic_publish(exchange='',
-                              routing_key=queue,
+                              routing_key="logs",
                               body=str(message))
         connection.close()
         return 

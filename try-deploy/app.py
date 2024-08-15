@@ -18,8 +18,8 @@ def send_to_image_scanning():
                               routing_key="logs",
                               body="hello rabbit:)")
         connection.close()
-    except Exception as e:
-        return "Error sending message to RabbitMQ: {e}"
+    except Exception:
+        return "Error sending message to RabbitMQ:"
     return "hellooooo"
 
 
