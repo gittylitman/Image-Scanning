@@ -16,6 +16,8 @@ def send_to_image_scanning():
 
 
 
+
+
 if __name__ == "__main__":
     send_to_image_scanning()
     serve(app, host="0.0.0.0", port=8080)
