@@ -22,7 +22,5 @@ def send_to_image_scanning():
         logging.error(f"Error sending message to RabbitMQ: {e}")
     return "help!!!!!!!!!!!!!!!!!!!!"
 
-
-
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8080)
