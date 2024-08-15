@@ -1,5 +1,6 @@
 flask
 waitress
+azure-cli
 python-dotenv
 pytest
 pika
