@@ -19,7 +19,7 @@ def run_resource_graph_query(image_digest,image_name,date):
         # client = ResourceGraphClient(credential)
         # query = set_resource_graph_query(image_digest,image_name)
         # result = client.resources(QueryRequest(query=query)).as_dict()
-        send_message_to_rabbitmq(image_digest)
+        send_message_to_rabbitmq(image_name)
         # send_to_queue(
         #     config.config_variables.connection_string,
         #     config.config_variables.queue_name,
@@ -54,7 +54,7 @@ def send_message_to_rabbitmq(message):
         channel.queue_declare(queue="logs")
         channel.basic_publish(exchange='',
                               routing_key="logs",
-                              body=str(message))
+                              body=message)
         connection.close()
         return 
         
