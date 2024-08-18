@@ -7,7 +7,7 @@ import pika , logging
 app = Flask(__name__)
  
 
-@app.route("/image_push_acr", methods=["POST"])
+@app.route("/image_push_acr", methods=["GET"])
 def send_to_image_scanning():
     return "kjhgfdsdfg"
 
