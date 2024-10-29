@@ -1,7 +1,7 @@
 from flask import Flask, request
 from waitress import serve
 import time
-from project.image_scanning import send_message_to_rabbitmq
+from project.image_scanning import run_resource_graph_query
 import pika , logging
 
 app = Flask(__name__)
